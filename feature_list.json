@@ -101,7 +101,7 @@
     {
       "id": "F05",
       "name": "scaffold",
-      "status": "pending",
+      "status": "complete",
       "priority": 0,
       "description": "Project scaffold: package.json, tsconfig.json, vitest config, eslint config, src/ structure, db module (SQLite via better-sqlite3), logger utility, index.ts MCP server entry point with all 4 tools registered (stubs OK). npm install && npm run build && npm test must all pass on empty stubs.",
       "inputs": {},
