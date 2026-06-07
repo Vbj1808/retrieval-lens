@@ -48,7 +48,14 @@ Tradeoff: async API instead of sync. Acceptable for MCP server use case.
 
 ---
 
+
+## D07 — Test `:memory:` database uses a process-local temp file
+
+**Decision:** Treat `RETRIEVAL_LENS_DB=:memory:` as a process-local temporary file path when initializing the libSQL client.
+**Reason:** The libSQL file client may open separate logical connections for migrations, transactions, and reads; `file::memory:` does not reliably share schema state across those connections. A temp file preserves fast isolated test storage while keeping transaction-backed writes observable by later reads in the same process.
+
 ## Open Questions
 
 - Should `retrieval_query` support pagination beyond `limit`? (cursor-based?) → defer to v0.2
 - Should we support exporting runs to JSON/CSV? → defer to v0.2
+- `npm run inspect` is currently blocked by npm registry policy (`E403` fetching `@modelcontextprotocol/inspector`). Re-run after registry access is available.

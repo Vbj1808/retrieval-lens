@@ -1,3 +1,6 @@
+import { createHash } from "node:crypto";
+import { insertObservedRun } from "../db/index.js";
+
 export interface ObserveInput {
   run_id: string;
   query: string;
@@ -7,7 +10,7 @@ export interface ObserveInput {
     source: string;
     rank: number;
   }>;
-  pipeline_tag?: string;
+  pipeline_tag?: string | undefined;
 }
 
 export interface ObserveOutput {
@@ -16,6 +19,28 @@ export interface ObserveOutput {
   chunk_count: number;
 }
 
-export function retrievalObserve(): ObserveOutput {
-  return { stored: false, run_id: "", chunk_count: 0 };
+function contentHash(content: string): string {
+  return createHash("sha256").update(content).digest("hex");
+}
+
+export async function retrievalObserve(input: ObserveInput): Promise<ObserveOutput> {
+  const createdAt = new Date().toISOString();
+  const chunks = input.chunks.map((chunk) => ({
+    ...chunk,
+    content_hash: contentHash(chunk.content),
+  }));
+
+  const stored = await insertObservedRun({
+    run_id: input.run_id,
+    query: input.query,
+    pipeline_tag: input.pipeline_tag ?? null,
+    created_at: createdAt,
+    chunks,
+  });
+
+  if (!stored) {
+    return { stored: false, run_id: input.run_id, chunk_count: 0 };
+  }
+
+  return { stored: true, run_id: input.run_id, chunk_count: input.chunks.length };
 }

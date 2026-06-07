@@ -45,7 +45,7 @@ export function createServer(): McpServer {
         chunk_count: z.number(),
       }),
     },
-    () => asStructuredContent(retrievalObserve()),
+    async (input) => asStructuredContent(await retrievalObserve(input)),
   );
 
   server.registerTool(
