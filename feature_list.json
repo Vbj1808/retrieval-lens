@@ -52,7 +52,7 @@
     {
       "id": "F03",
       "name": "retrieval_diff",
-      "status": "pending",
+      "status": "complete",
       "priority": 3,
       "description": "Diff tool. Compares two run_ids and returns: chunks that appeared in run A but not B, chunks in B but not A, score deltas for shared chunks. Useful for 'did my retrieval change after I updated my embeddings?'",
       "inputs": {

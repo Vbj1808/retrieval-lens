@@ -98,7 +98,7 @@ export function createServer(): McpServer {
         summary: z.string(),
       }),
     },
-    () => asStructuredContent(retrievalDiff()),
+    async (input) => asStructuredContent(await retrievalDiff(input)),
   );
 
   server.registerTool(

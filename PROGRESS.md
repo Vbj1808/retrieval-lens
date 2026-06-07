@@ -9,15 +9,22 @@
 - `npm test` exits 0 with all query tests passing. Evidence: `✓ tests/query.test.ts (6 tests)`, `Test Files  4 passed (4)`, and `Tests  14 passed (14)`.
 - Coverage for `src/tools/query.ts` is >= 85%. Evidence: coverage report row `query.ts   |     100 |      100 |     100 |     100`.
 - `npm run lint` exits 0. Evidence: `eslint src/ tests/ && tsc --noEmit` completed with process exit 0.
-- `npm run inspect` could not be completed in this environment because `npx @modelcontextprotocol/inspector dist/index.js` was blocked by registry policy. Evidence: `npm error 403 403 Forbidden - GET https://registry.npmjs.org/@modelcontextprotocol%2finspector`.
+- `npm run inspect` could not be completed in this environment because `npx @modelcontextprotocol/inspector dist/index.js` was blocked by registry policy. Evidence: `npm error 403 403 Forbidden - GET https://registry.npmjs.org/@modelcontextprotocol%2finspector`. Latest F03 attempt produced the same E403 registry failure.
+
+
+- 2026-06-07: Completed F03 `retrieval_diff` diff tool only. The tool validates both run IDs, loads stored chunks through `src/db/`, matches one-to-one by `source` or `content_hash`, returns `only_in_a`, `only_in_b`, `shared` score deltas, and emits the summary string with average delta.
+- `npm run build` exits 0 with 0 TypeScript errors for F03. Evidence: `> retrieval-lens@0.1.0 build` followed by successful process exit 0.
+- `npm test` exits 0 with all diff tests passing. Evidence: `✓ tests/diff.test.ts (7 tests)`, `Test Files  4 passed (4)`, and `Tests  20 passed (20)`.
+- Coverage for `src/tools/diff.ts` is >= 85%. Evidence: coverage report row `diff.ts    |    97.1 |     91.3 |     100 |    97.1`.
+- `npm run lint` exits 0. Evidence: `eslint src/ tests/ && tsc --noEmit` completed before `npm run inspect` started.
 
 ## Current Task
 
-- F02 `retrieval_query` is complete, except external inspector execution remains blocked by npm registry policy in this environment.
+- F03 `retrieval_diff` is complete. External inspector execution remains blocked by npm registry policy in this environment.
 
 ## Next Task
 
-- F03 `retrieval_diff` remains pending. Do not start it until the next session.
+- F04 `retrieval_stats` remains pending. Do not start it unless explicitly assigned in a future session.
 
 ## Blockers / Risks
 

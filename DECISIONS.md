@@ -58,7 +58,7 @@ Tradeoff: async API instead of sync. Acceptable for MCP server use case.
 
 - Should `retrieval_query` support pagination beyond `limit`? (cursor-based?) → defer to v0.2
 - Should we support exporting runs to JSON/CSV? → defer to v0.2
-- `npm run inspect` is currently blocked by npm registry policy (`E403` fetching `@modelcontextprotocol/inspector`). Re-run after registry access is available.
+- `npm run inspect` is currently blocked by npm registry policy (`E403` fetching `@modelcontextprotocol/inspector`). Re-run after registry access is available. This also blocked the F03 inspection attempt on 2026-06-07.
 
 ## D08 — `retrieval_query` run ordering
 
