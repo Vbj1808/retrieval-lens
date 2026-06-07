@@ -1,6 +1,6 @@
 {
   "name": "retrieval-lens",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "MCP server that audits RAG retrieval — logs what chunks the model saw, scores, queries, and sources before any answer was generated.",
   "keywords": [
     "mcp",
