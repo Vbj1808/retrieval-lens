@@ -71,7 +71,7 @@ export function createServer(): McpServer {
         ),
       }),
     },
-    () => asStructuredContent(retrievalQuery()),
+    async (input) => asStructuredContent(await retrievalQuery(input)),
   );
 
   server.registerTool(

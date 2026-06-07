@@ -30,7 +30,7 @@
     {
       "id": "F02",
       "name": "retrieval_query",
-      "status": "pending",
+      "status": "complete",
       "priority": 2,
       "description": "Playback tool. Given a run_id (or pipeline_tag + time range), returns the full retrieval record: query, all chunks with scores, timestamp. Lets an agent answer 'what did I see before I generated that response?'",
       "inputs": {
