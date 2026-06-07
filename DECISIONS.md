@@ -59,3 +59,8 @@ Tradeoff: async API instead of sync. Acceptable for MCP server use case.
 - Should `retrieval_query` support pagination beyond `limit`? (cursor-based?) → defer to v0.2
 - Should we support exporting runs to JSON/CSV? → defer to v0.2
 - `npm run inspect` is currently blocked by npm registry policy (`E403` fetching `@modelcontextprotocol/inspector`). Re-run after registry access is available.
+
+## D08 — `retrieval_query` run ordering
+
+**Decision:** When querying multiple runs, return newest runs first by `created_at DESC`, then apply the requested limit.
+**Reason:** The F02 contract specifies filtering and limiting but not sort order. Newest-first makes the default playback query return the most recent audit records.

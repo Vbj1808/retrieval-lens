@@ -23,6 +23,28 @@ export interface ObservedRunRecord {
   chunks: ObservedChunkRecord[];
 }
 
+export interface QueryRunFilter {
+  run_id?: string | undefined;
+  pipeline_tag?: string | undefined;
+  since_iso?: string | undefined;
+  limit: number;
+}
+
+export interface RetrievedChunkRecord {
+  content: string;
+  score: number;
+  source: string;
+  rank: number;
+}
+
+export interface RetrievedRunRecord {
+  run_id: string;
+  query: string;
+  pipeline_tag: string | null;
+  created_at: string;
+  chunks: RetrievedChunkRecord[];
+}
+
 function defaultDbUrl(): string {
   return `file:${join(homedir(), ".retrieval-lens", "audit.db")}`;
 }
@@ -121,4 +143,82 @@ export async function insertObservedRun(run: ObservedRunRecord): Promise<boolean
       transaction.close();
     }
   }
+}
+
+function textValue(value: unknown): string {
+  return typeof value === "string" ? value : String(value);
+}
+
+function nullableTextValue(value: unknown): string | null {
+  if (value === null) {
+    return null;
+  }
+
+  return textValue(value);
+}
+
+function numericValue(value: unknown): number {
+  return typeof value === "number" ? value : Number(value);
+}
+
+export async function findRetrievedRuns(filter: QueryRunFilter): Promise<RetrievedRunRecord[]> {
+  const client = await getDb();
+  const conditions: string[] = [];
+  const args: Array<string | number> = [];
+  const limit = filter.run_id === undefined ? filter.limit : 1;
+
+  if (filter.run_id !== undefined) {
+    conditions.push("run_id = ?");
+    args.push(filter.run_id);
+  } else {
+    if (filter.pipeline_tag !== undefined) {
+      conditions.push("pipeline_tag = ?");
+      args.push(filter.pipeline_tag);
+    }
+
+    if (filter.since_iso !== undefined) {
+      conditions.push("created_at >= ?");
+      args.push(filter.since_iso);
+    }
+  }
+
+  const whereClause = conditions.length === 0 ? "" : `WHERE ${conditions.join(" AND ")}`;
+  const runResult = await client.execute({
+    sql: `SELECT run_id, query, pipeline_tag, created_at FROM runs ${whereClause} ORDER BY created_at DESC LIMIT ?`,
+    args: [...args, limit],
+  });
+
+  const runs = runResult.rows.map((row) => ({
+    run_id: textValue(row.run_id),
+    query: textValue(row.query),
+    pipeline_tag: nullableTextValue(row.pipeline_tag),
+    created_at: textValue(row.created_at),
+    chunks: [] as RetrievedChunkRecord[],
+  }));
+
+  if (runs.length === 0) {
+    return [];
+  }
+
+  const chunksByRun = new Map(runs.map((run) => [run.run_id, run.chunks]));
+  const placeholders = runs.map(() => "?").join(", ");
+  const chunkResult = await client.execute({
+    sql: `SELECT run_id, content, score, source, rank FROM chunks WHERE run_id IN (${placeholders}) ORDER BY run_id, rank ASC`,
+    args: runs.map((run) => run.run_id),
+  });
+
+  for (const row of chunkResult.rows) {
+    const runChunks = chunksByRun.get(textValue(row.run_id));
+
+    if (runChunks !== undefined) {
+      runChunks.push({
+        content: textValue(row.content),
+        score: numericValue(row.score),
+        source: textValue(row.source),
+        rank: numericValue(row.rank),
+      });
+    }
+  }
+
+  return runs;
 }
