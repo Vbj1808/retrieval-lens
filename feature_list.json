@@ -75,7 +75,7 @@
     {
       "id": "F04",
       "name": "retrieval_stats",
-      "status": "pending",
+      "status": "complete",
       "priority": 4,
       "description": "Stats tool. Aggregates across all stored runs (or filtered by pipeline_tag). Returns: avg top-1 score, score distribution (p50/p90/p99), most-retrieved sources, runs per day. Useful for 'is my retriever getting worse over time?'",
       "inputs": {
