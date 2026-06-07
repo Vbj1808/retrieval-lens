@@ -64,3 +64,7 @@ Tradeoff: async API instead of sync. Acceptable for MCP server use case.
 
 **Decision:** When querying multiple runs, return newest runs first by `created_at DESC`, then apply the requested limit.
 **Reason:** The F02 contract specifies filtering and limiting but not sort order. Newest-first makes the default playback query return the most recent audit records.
+
+## 2026-06-07 — F04 `retrieval_stats`
+
+- Open risk: `npm run inspect` still cannot execute because `npx @modelcontextprotocol/inspector dist/index.js` is blocked by npm registry policy with HTTP 403 for `@modelcontextprotocol/inspector`. Re-run schema inspection when the package is available through the configured registry.

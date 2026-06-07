@@ -120,7 +120,7 @@ export function createServer(): McpServer {
         runs_per_day: z.array(z.object({ date: z.string(), count: z.number() })),
       }),
     },
-    () => asStructuredContent(retrievalStats()),
+    async (input) => asStructuredContent(await retrievalStats(input)),
   );
 
   return server;

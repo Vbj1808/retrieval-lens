@@ -45,6 +45,25 @@ export interface RetrievedRunRecord {
   chunks: RetrievedChunkRecord[];
 }
 
+
+export interface StatsRunFilter {
+  pipeline_tag?: string | undefined;
+  since_iso?: string | undefined;
+  until_iso?: string | undefined;
+}
+
+export interface StatsChunkRecord {
+  score: number;
+  source: string;
+  rank: number;
+}
+
+export interface StatsRunRecord {
+  run_id: string;
+  created_at: string;
+  chunks: StatsChunkRecord[];
+}
+
 export interface DiffChunkRecord {
   content: string;
   content_hash: string;
@@ -255,4 +274,63 @@ export async function findDiffChunks(runId: string): Promise<DiffChunkRecord[]> 
     source: textValue(row.source),
     rank: numericValue(row.rank),
   }));
+}
+
+
+export async function findStatsRuns(filter: StatsRunFilter): Promise<StatsRunRecord[]> {
+  const client = await getDb();
+  const conditions: string[] = [];
+  const args: string[] = [];
+
+  if (filter.pipeline_tag !== undefined) {
+    conditions.push("pipeline_tag = ?");
+    args.push(filter.pipeline_tag);
+  }
+
+  if (filter.since_iso !== undefined) {
+    conditions.push("created_at >= ?");
+    args.push(filter.since_iso);
+  }
+
+  if (filter.until_iso !== undefined) {
+    conditions.push("created_at <= ?");
+    args.push(filter.until_iso);
+  }
+
+  const whereClause = conditions.length === 0 ? "" : `WHERE ${conditions.join(" AND ")}`;
+  const runResult = await client.execute({
+    sql: `SELECT run_id, created_at FROM runs ${whereClause} ORDER BY created_at ASC`,
+    args,
+  });
+
+  const runs = runResult.rows.map((row) => ({
+    run_id: textValue(row.run_id),
+    created_at: textValue(row.created_at),
+    chunks: [] as StatsChunkRecord[],
+  }));
+
+  if (runs.length === 0) {
+    return [];
+  }
+
+  const chunksByRun = new Map(runs.map((run) => [run.run_id, run.chunks]));
+  const placeholders = runs.map(() => "?").join(", ");
+  const chunkResult = await client.execute({
+    sql: `SELECT run_id, score, source, rank FROM chunks WHERE run_id IN (${placeholders}) ORDER BY run_id, rank ASC`,
+    args: runs.map((run) => run.run_id),
+  });
+
+  for (const row of chunkResult.rows) {
+    const runChunks = chunksByRun.get(textValue(row.run_id));
+
+    if (runChunks !== undefined) {
+      runChunks.push({
+        score: numericValue(row.score),
+        source: textValue(row.source),
+        rank: numericValue(row.rank),
+      });
+    }
+  }
+
+  return runs;
 }

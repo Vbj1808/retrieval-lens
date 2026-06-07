@@ -29,3 +29,15 @@
 ## Blockers / Risks
 
 - `npm run inspect` is blocked by npm registry policy in this environment (`E403` fetching `@modelcontextprotocol/inspector`). Re-run once the inspector package is available through the configured registry.
+
+- 2026-06-07: Completed F04 `retrieval_stats` stats tool only. The tool now accepts `pipeline_tag`, `since_iso`, and `until_iso` filters; aggregates matching runs; computes total runs, average rank-1 score, p50/p90 score distribution, top sources, and runs per day; and returns the zeroed struct for empty/no-match results.
+- `npm run build` exits 0 with 0 TypeScript errors for F04. Evidence: `> retrieval-lens@0.1.0 build` followed by successful process exit 0.
+- `npm test` exits 0 with all stats tests passing. Evidence: `✓ tests/stats.test.ts (9 tests)`, `Test Files  4 passed (4)`, and `Tests  27 passed (27)`.
+- Coverage for `src/tools/stats.ts` is >= 85%. Evidence: coverage report row `stats.ts   |     100 |    87.09 |     100 |     100`.
+- `npm run lint` exits 0. Evidence: `eslint src/ tests/ && tsc --noEmit` completed with process exit 0.
+- `npm run inspect` remains blocked by npm registry policy in this environment. Evidence: `npm error 403 403 Forbidden - GET https://registry.npmjs.org/@modelcontextprotocol%2finspector`.
+
+## F04 Session Closeout
+
+- Current state: F04 `retrieval_stats` is complete except external inspector execution remains blocked by npm registry policy in this environment.
+- Final build requirement: `npm run build` was re-run after implementation and exited 0.
