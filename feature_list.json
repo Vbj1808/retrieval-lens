@@ -1,19 +1,19 @@
 {
   "project": "retrieval-lens",
   "version": "0.1.0",
-  "description": "MCP server that audits RAG retrieval — logs what chunks the model saw, scores, queries, and sources before any answer was generated.",
+  "description": "MCP server that audits RAG retrieval \u2014 logs what chunks the model saw, scores, queries, and sources before any answer was generated.",
   "features": [
     {
       "id": "F01",
       "name": "retrieval_observe",
-      "status": "pending",
+      "status": "complete",
       "priority": 1,
       "description": "Core capture tool. Called by the agent immediately after a retrieval step. Stores: run_id, query text, retrieved chunks (content + score + source + rank), timestamp, and optional pipeline_tag.",
       "inputs": {
-        "run_id": "string — caller-assigned ID for this retrieval run (e.g. uuid)",
-        "query": "string — the exact query sent to the retriever",
+        "run_id": "string \u2014 caller-assigned ID for this retrieval run (e.g. uuid)",
+        "query": "string \u2014 the exact query sent to the retriever",
         "chunks": "Array<{ content: string; score: number; source: string; rank: number }>",
-        "pipeline_tag": "string? — optional label e.g. 'hoplink-oncology' or 'promed-billing'"
+        "pipeline_tag": "string? \u2014 optional label e.g. 'hoplink-oncology' or 'promed-billing'"
       },
       "outputs": {
         "stored": "boolean",
@@ -34,10 +34,10 @@
       "priority": 2,
       "description": "Playback tool. Given a run_id (or pipeline_tag + time range), returns the full retrieval record: query, all chunks with scores, timestamp. Lets an agent answer 'what did I see before I generated that response?'",
       "inputs": {
-        "run_id": "string? — look up a specific run",
-        "pipeline_tag": "string? — filter by tag",
-        "limit": "number? — max runs to return, default 10",
-        "since_iso": "string? — ISO timestamp lower bound"
+        "run_id": "string? \u2014 look up a specific run",
+        "pipeline_tag": "string? \u2014 filter by tag",
+        "limit": "number? \u2014 max runs to return, default 10",
+        "since_iso": "string? \u2014 ISO timestamp lower bound"
       },
       "outputs": {
         "runs": "Array<{ run_id, query, pipeline_tag, timestamp, chunks: Array<{content, score, source, rank}> }>"
@@ -58,13 +58,13 @@
       "inputs": {
         "run_id_a": "string",
         "run_id_b": "string",
-        "match_by": "'source' | 'content_hash' — how to identify the same chunk across runs"
+        "match_by": "'source' | 'content_hash' \u2014 how to identify the same chunk across runs"
       },
       "outputs": {
         "only_in_a": "Array<chunk>",
         "only_in_b": "Array<chunk>",
         "shared": "Array<{ chunk, score_a, score_b, score_delta }>",
-        "summary": "string — plain-English one-liner"
+        "summary": "string \u2014 plain-English one-liner"
       },
       "definition_of_done": [
         "npm test passes for F03 suite including edge case: identical runs return empty diffs",
@@ -79,9 +79,9 @@
       "priority": 4,
       "description": "Stats tool. Aggregates across all stored runs (or filtered by pipeline_tag). Returns: avg top-1 score, score distribution (p50/p90/p99), most-retrieved sources, runs per day. Useful for 'is my retriever getting worse over time?'",
       "inputs": {
-        "pipeline_tag": "string? — filter to a specific pipeline",
-        "since_iso": "string? — time lower bound",
-        "until_iso": "string? — time upper bound"
+        "pipeline_tag": "string? \u2014 filter to a specific pipeline",
+        "since_iso": "string? \u2014 time lower bound",
+        "until_iso": "string? \u2014 time upper bound"
       },
       "outputs": {
         "total_runs": "number",
