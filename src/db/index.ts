@@ -45,6 +45,14 @@ export interface RetrievedRunRecord {
   chunks: RetrievedChunkRecord[];
 }
 
+export interface DiffChunkRecord {
+  content: string;
+  content_hash: string;
+  score: number;
+  source: string;
+  rank: number;
+}
+
 function defaultDbUrl(): string {
   return `file:${join(homedir(), ".retrieval-lens", "audit.db")}`;
 }
@@ -221,4 +229,30 @@ export async function findRetrievedRuns(filter: QueryRunFilter): Promise<Retriev
   }
 
   return runs;
+}
+
+export async function runExists(runId: string): Promise<boolean> {
+  const client = await getDb();
+  const result = await client.execute({
+    sql: "SELECT 1 FROM runs WHERE run_id = ? LIMIT 1",
+    args: [runId],
+  });
+
+  return result.rows.length > 0;
+}
+
+export async function findDiffChunks(runId: string): Promise<DiffChunkRecord[]> {
+  const client = await getDb();
+  const result = await client.execute({
+    sql: "SELECT content, content_hash, score, source, rank FROM chunks WHERE run_id = ? ORDER BY rank ASC",
+    args: [runId],
+  });
+
+  return result.rows.map((row) => ({
+    content: textValue(row.content),
+    content_hash: textValue(row.content_hash),
+    score: numericValue(row.score),
+    source: textValue(row.source),
+    rank: numericValue(row.rank),
+  }));
 }
