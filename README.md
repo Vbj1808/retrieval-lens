@@ -110,10 +110,3 @@ Those are full observability platforms. retrieval-lens is surgical:
 MIT
 
 ---
-
-## Trust Stack
-
-retrieval-lens is part of a three-layer trust stack for RAG pipelines:
-- Portcullis — runtime MCP firewall (blocks dangerous tool calls)
-- retrieval-lens — retrieval auditor (logs what the model saw)
-- Dokis — output auditor (verifies claims in generated answers)
