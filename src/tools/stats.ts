@@ -1,5 +1,11 @@
 import { findStatsRuns } from "../db/index.js";
 
+export const retrievalStatsTool = {
+  description: "Aggregate retrieval quality and volume metrics across stored runs, including score distributions, top sources, and daily trends.",
+  instructions:
+    "Use this tool to get aggregate statistics across multiple retrieval runs. Filter by pipeline_tag, since_iso, and until_iso. Returns total_runs, avg_top1_score, p50_score, p90_score, top_sources by frequency, and runs_per_day trend data.",
+} as const;
+
 export interface StatsInput {
   pipeline_tag?: string | undefined;
   since_iso?: string | undefined;

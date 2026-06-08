@@ -1,6 +1,12 @@
 import { createHash } from "node:crypto";
 import { insertObservedRun } from "../db/index.js";
 
+export const retrievalObserveTool = {
+  description: "Capture a RAG retrieval run, including query, chunks, scores, sources, and ranks, for later audit and diff workflows.",
+  instructions:
+    "Call this tool immediately after every retrieval call in your RAG pipeline. Pass the run_id, query, and all chunks returned by the retriever. Each chunk must include source, content, score, and rank. The tool persists the run to SQLite for later auditing and diffing.",
+} as const;
+
 export interface ObserveInput {
   run_id: string;
   query: string;

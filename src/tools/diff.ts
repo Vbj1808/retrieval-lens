@@ -1,5 +1,11 @@
 import { findDiffChunks, runExists, type DiffChunkRecord } from "../db/index.js";
 
+export const retrievalDiffTool = {
+  description: "Compare two retrieval runs side by side to find missing chunks, shared chunks, and score movement between runs.",
+  instructions:
+    'Use this tool to compare two retrieval runs side by side. Provide run_id_a and run_id_b, and set match_by to either "source" or "content_hash". Returns chunks only in A, only in B, shared chunks, and a score_delta summary showing retrieval regression or improvement.',
+} as const;
+
 export type MatchBy = "source" | "content_hash";
 
 export interface DiffInput {

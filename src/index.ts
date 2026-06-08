@@ -3,10 +3,10 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
 import { getDb } from "./db/index.js";
-import { retrievalObserve } from "./tools/observe.js";
-import { retrievalQuery } from "./tools/query.js";
-import { retrievalDiff } from "./tools/diff.js";
-import { retrievalStats } from "./tools/stats.js";
+import { retrievalObserve, retrievalObserveTool } from "./tools/observe.js";
+import { retrievalQuery, retrievalQueryTool } from "./tools/query.js";
+import { retrievalDiff, retrievalDiffTool } from "./tools/diff.js";
+import { retrievalStats, retrievalStatsTool } from "./tools/stats.js";
 import { logger } from "./utils/logger.js";
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 
@@ -33,7 +33,8 @@ export function createServer(): McpServer {
     "retrieval_observe",
     {
       title: "Retrieval Observe",
-      description: "Stub capture tool for retrieval runs.",
+      description: retrievalObserveTool.description,
+      _meta: { instructions: retrievalObserveTool.instructions },
       inputSchema: z.object({
         run_id: z.string(),
         query: z.string(),
@@ -53,7 +54,8 @@ export function createServer(): McpServer {
     "retrieval_query",
     {
       title: "Retrieval Query",
-      description: "Stub playback tool for retrieval runs.",
+      description: retrievalQueryTool.description,
+      _meta: { instructions: retrievalQueryTool.instructions },
       inputSchema: z.object({
         run_id: z.string().optional(),
         pipeline_tag: z.string().optional(),
@@ -79,7 +81,8 @@ export function createServer(): McpServer {
     "retrieval_diff",
     {
       title: "Retrieval Diff",
-      description: "Stub comparison tool for retrieval runs.",
+      description: retrievalDiffTool.description,
+      _meta: { instructions: retrievalDiffTool.instructions },
       inputSchema: z.object({
         run_id_a: z.string(),
         run_id_b: z.string(),
@@ -106,7 +109,8 @@ export function createServer(): McpServer {
     "retrieval_stats",
     {
       title: "Retrieval Stats",
-      description: "Stub aggregate stats tool for retrieval runs.",
+      description: retrievalStatsTool.description,
+      _meta: { instructions: retrievalStatsTool.instructions },
       inputSchema: z.object({
         pipeline_tag: z.string().optional(),
         since_iso: z.string().optional(),

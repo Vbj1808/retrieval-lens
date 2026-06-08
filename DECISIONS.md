@@ -68,3 +68,8 @@ Tradeoff: async API instead of sync. Acceptable for MCP server use case.
 ## 2026-06-07 — F04 `retrieval_stats`
 
 - Open risk: `npm run inspect` still cannot execute because `npx @modelcontextprotocol/inspector dist/index.js` is blocked by npm registry policy with HTTP 403 for `@modelcontextprotocol/inspector`. Re-run schema inspection when the package is available through the configured registry.
+
+## D09 — Tool-specific instructions are exposed through `_meta.instructions`
+
+**Decision:** Store Glama-facing per-tool instructions in each tool module and expose them during MCP `tools/list` through the registered tool `_meta.instructions` value.
+**Reason:** The installed MCP SDK's `registerTool` config supports `description` and `_meta`, but not a first-class root-level `instructions` field for tools. `_meta.instructions` preserves the requested instructions in the emitted tool metadata without weakening TypeScript schema checks.
