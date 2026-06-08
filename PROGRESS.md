@@ -52,3 +52,14 @@
 - `npm run lint` exits 0. Evidence: `eslint src/ tests/ && tsc --noEmit` completed with process exit 0.
 - No `src/` or `tests/` files were modified in this session.
 - Blockers / risks: no unresolved risks or open questions for this documentation-and-examples update.
+
+## 2026-06-08 Tool Metadata Scoring Session
+
+- Current state: Improved metadata for all four MCP tools by replacing stub descriptions with action-oriented descriptions and attaching the requested tool instructions through each tool's MCP `_meta.instructions` field.
+- Baseline verification before edits: `npm install && npm run build && npm test` exited 0. Evidence: `Test Files  4 passed (4)` and `Tests  27 passed (27)`.
+- `npm run build` exits 0 with 0 TypeScript errors after metadata edits. Evidence: `> retrieval-lens@0.1.1 build` followed by successful process exit 0.
+- `npm test` exits 0 after metadata edits. Evidence: `Test Files  4 passed (4)` and `Tests  27 passed (27)`.
+- `npm run lint` exits 0 after metadata edits. Evidence: `eslint src/ tests/ && tsc --noEmit` completed before `npm run inspect` started.
+- MCP tool metadata smoke check exits 0. Evidence: the stdio `tools/list` check printed all four tool names with improved descriptions and `_meta.instructions` prefixes.
+- `npm run inspect` remains blocked by npm registry policy in this environment. Evidence: `npm error 403 403 Forbidden - GET https://registry.npmjs.org/@modelcontextprotocol%2finspector`.
+- `feature_list.json` remains unchanged because this session updated existing complete tool metadata only; no feature status changed.
