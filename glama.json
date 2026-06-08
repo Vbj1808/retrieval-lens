@@ -1,0 +1,4 @@
+{
+  "title": "retrieval-lens",
+  "description": "Black-box flight recorder for RAG retrieval inside MCP agents. Logs chunks, scores, sources and rankings so you can audit, replay and diff retrieval runs."
+}
