@@ -4,10 +4,6 @@
 
 **retrieval-lens** is an MCP server that logs every retrieval step your RAG agent makes — what chunks were retrieved, their scores, sources, and rankings — so you can audit, replay, and diff retrieval runs after the fact.
 
-```bash
-npx retrieval-lens
-```
-
 ---
 
 ## The Problem
@@ -15,6 +11,22 @@ npx retrieval-lens
 When a RAG agent gives a wrong answer, you need to know: did retrieval fail, or did generation fail? Right now there's no easy way to answer that. Your observability tool shows you the LLM call. It doesn't show you which chunks the model saw before it answered, what scores they had, or how retrieval changed between yesterday and today.
 
 retrieval-lens fixes that. Every retrieval run is logged. Nothing is hidden.
+
+---
+
+## Demo
+
+When your RAG agent gives a wrong answer, ask retrieval-lens what it saw:
+
+```typescript
+await mcp.call("retrieval_diff", {
+  run_id_a: "support-bot-before-embedding-refresh",
+  run_id_b: "support-bot-after-embedding-refresh",
+  match_by: "source"
+});
+```
+
+See docs/demo-diff.png for real output from Claude Code.
 
 ---
 
@@ -31,17 +43,16 @@ retrieval-lens fixes that. Every retrieval run is logged. Nothing is hidden.
 
 ## Quickstart
 
-Add to your MCP client config (Claude Desktop, Cursor, Windsurf):
+Run retrieval-lens directly with npx:
 
-```json
-{
-  "mcpServers": {
-    "retrieval-lens": {
-      "command": "npx",
-      "args": ["retrieval-lens"]
-    }
-  }
-}
+```bash
+npx retrieval-lens
+```
+
+Add retrieval-lens to Claude Code with one command:
+
+```bash
+claude mcp add retrieval-lens npx retrieval-lens
 ```
 
 Then call `retrieval_observe` after every retrieval step in your RAG pipeline:
@@ -60,6 +71,18 @@ await mcp.call("retrieval_observe", {
 
 ---
 
+## Adapters
+
+### LangChain
+
+See examples/langchain-adapter.ts
+
+### LlamaIndex
+
+See examples/llamaindex-adapter.ts
+
+---
+
 ## Why not LangSmith / Langfuse?
 
 Those are full observability platforms. retrieval-lens is surgical:
@@ -75,13 +98,22 @@ Those are full observability platforms. retrieval-lens is surgical:
 🚧 Active development. Harness-first build using [harness engineering](https://walkinglabs.github.io/learn-harness-engineering/en/) principles.
 
 - [x] F05 — scaffold
-- [ ] F01 — `retrieval_observe`
-- [ ] F02 — `retrieval_query`
-- [ ] F03 — `retrieval_diff`
-- [ ] F04 — `retrieval_stats`
+- [x] F01 — retrieval_observe
+- [x] F02 — retrieval_query
+- [x] F03 — retrieval_diff
+- [x] F04 — retrieval_stats
 
 ---
 
 ## License
 
 MIT
+
+---
+
+## Trust Stack
+
+retrieval-lens is part of a three-layer trust stack for RAG pipelines:
+- Portcullis — runtime MCP firewall (blocks dangerous tool calls)
+- retrieval-lens — retrieval auditor (logs what the model saw)
+- Dokis — output auditor (verifies claims in generated answers)

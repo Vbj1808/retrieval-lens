@@ -41,3 +41,14 @@
 
 - Current state: F04 `retrieval_stats` is complete except external inspector execution remains blocked by npm registry policy in this environment.
 - Final build requirement: `npm run build` was re-run after implementation and exited 0.
+
+## 2026-06-08 Documentation and Adapter Examples Session
+
+- Current state: README was replaced with the updated demo, Quickstart, Adapters, complete Status checklist, and Trust Stack content requested for the documentation refresh.
+- Adapter examples added under `examples/` for LangChain and LlamaIndex, with an example-specific TypeScript config and ambient optional-dependency type stubs so the examples can be checked without installing those frameworks.
+- Baseline verification before edits: `npm install && npm run build && npm test` exited 0. Evidence: `Test Files  4 passed (4)` and `Tests  27 passed (27)`.
+- Example compile check exits 0. Evidence: `npx tsc --noEmit -p examples/tsconfig.json` completed with process exit 0.
+- `npm run build` exits 0 with 0 TypeScript errors. Evidence: `> retrieval-lens@0.1.1 build` followed by successful process exit 0.
+- `npm run lint` exits 0. Evidence: `eslint src/ tests/ && tsc --noEmit` completed with process exit 0.
+- No `src/` or `tests/` files were modified in this session.
+- Blockers / risks: no unresolved risks or open questions for this documentation-and-examples update.
